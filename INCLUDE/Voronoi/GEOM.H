@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <graphics.h>
+#include <dos.h>
 
 /************************************************************************************
  * Esta biblioteca contiene los tipos de datos geometricos utilizados en el programa,
@@ -19,6 +20,8 @@
 #define VCOLOR_TRIANGULO_ACTUAL LIGHTBLUE
 #define VCOLOR_PUNTO_DESCARTADO RED
 #define VCOLOR_PUNTO_EXTREMO GREEN
+#define VCOLOR_PUNTO_ACTUAL CYAN
+#define VCOLOR_LADO_ACTUAL BROWN
 
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
@@ -80,13 +83,17 @@ float Area2(Vertice *a, Vertice *b, Vertice *c);
 /* usa el signo de la determinante de un triangulo
 para determinar si c esta a la izquierda del segmento ab */
 bool EnLaIzquierda(Vertice *a, Vertice* b, Vertice *c);
-
 /* determina si el punto d se encuentra dentro de el triangulo abc */
 bool EnTriangulo(Vertice* a, Vertice* b, Vertice* c, Vertice* d);
+/* Revisa que el lado tenga puntos solo en un medio plano y no en el otro */
+void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
 
 /*  determina los puntos extremos y dibuja la envolvente convexa,
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */
-void EnvolventeConvexaLento(Vertices *v, Modo modo);
+void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso);
+/* determina la envolvente convexa buscando los lados extremos, en lugar de puntos,
+este algoritmo es O(n log n) */
+void EnvolventeConvexa(Vertices *v, Modo modo, int retraso);
 
 #include <Voronoi\geom.c>
 

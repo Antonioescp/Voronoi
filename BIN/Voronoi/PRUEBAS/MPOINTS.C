@@ -15,16 +15,17 @@ int main()
 {
 	int gd = DETECT, gm;
 
+	/* modo de graficos */
+	Modo modoDePresentacion = rapido;
+	/* velocidad en modo descriptivo */
+	int retraso = 0;
+
 	/* limites del plano */
 	int xMax, yMax, xMid, yMid;
 
 	/* manejo de entrada */
 	char input;
-	char numeroDePuntos[50];
-	char area[50];
-	char v1[50];
-	char v2[50];
-	char v3[50];
+	char buffer[50];
 
 	/* manejo de raton */
 	Mouse raton;
@@ -60,11 +61,64 @@ int main()
 		/* manejando entrada de teclado */
 		switch(input)
 		{
+			/* para aumentar y disminuir el retraso */
+			case 'p':
+				cleardevice();
+				DibujarVertices(&vertices, COLOR_VERTICE);
+
+				retraso += retraso >= 500 ? 0 : 10 ;
+
+				sprintf(buffer, "Retraso: %dms", retraso);
+				outtextxy(15, 15, buffer);
+				input = '';
+				break;
+			case 'o':
+				cleardevice();
+				DibujarVertices(&vertices, COLOR_VERTICE);
+
+				retraso -= retraso <= 0 ? 0 : 10 ;
+
+				sprintf(buffer, "Retraso: %dms", retraso);
+				outtextxy(15, 15, buffer);
+				input = '';
+				break;
+			/* Alterna el modo de presentacion de los algoritmos */
+			case 'm':
+				cleardevice();
+				DibujarVertices(&vertices, COLOR_VERTICE);
+				if(modoDePresentacion == descriptivo)
+				{
+					modoDePresentacion = rapido;
+					sprintf(buffer, "Modo rapido");
+				}
+				else
+				{
+					modoDePresentacion = descriptivo;
+					sprintf(buffer, "Modo descriptivo");
+				}
+
+				setcolor(WHITE);
+				outtextxy(15, 15, buffer);
+				input = '';
+				break;
+			/* determina lados extremos */
 			case 'c':
+				mocultar();
+				
+				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
+				EnvolventeConvexa(&vertices, modoDePresentacion, retraso);
+
+				cleardevice();
+				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
+				mver();
+				input = '';
+				break;
+			/* determina puntos extremos */
+			case 's':
 				mocultar();
 
 				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
-				EnvolventeConvexaLento(&vertices, descriptivo);
+				EnvolventeConvexaLento(&vertices, modoDePresentacion, retraso);
 
 				cleardevice();
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
@@ -72,6 +126,7 @@ int main()
 				mver();
 				input = '';
 				break;
+			/* borra pantalla y vertices */
 			case 'r':
 				RemoverVertices(&vertices);
 				mocultar();
@@ -79,20 +134,25 @@ int main()
 				mver();
 				input = '';
 				break;
+			/* muestra el area dada por los primeros 3 puntos */
 			case 'a':
 				if(vertices.longitud >= 3)
 				{
+					cleardevice();
 					setcolor(WHITE);
 
-					sprintf(area, "Area: %.2f", Area2(&vertices.elementos[0], &vertices.elementos[1], &vertices.elementos[2]));
-					sprintf(v1, "A -> x: %d y: %d", vertices.elementos[0].x, vertices.elementos[0].y);
-					sprintf(v2, "B -> x: %d y: %d", vertices.elementos[1].x, vertices.elementos[1].y);
-					sprintf(v3, "C -> x: %d y: %d", vertices.elementos[2].x, vertices.elementos[2].y);
-					cleardevice();
-					outtextxy(15, 15, area);
-					outtextxy(15, 30, v1);
-					outtextxy(15, 45, v2);
-					outtextxy(15, 60, v3);
+					sprintf(buffer, "Area: %.2f", Area2(&vertices.elementos[0], &vertices.elementos[1], &vertices.elementos[2]));
+					outtextxy(15, 15, buffer);
+
+					sprintf(buffer, "A -> x: %d y: %d", vertices.elementos[0].x, vertices.elementos[0].y);
+					outtextxy(15, 30, buffer);
+
+					sprintf(buffer, "B -> x: %d y: %d", vertices.elementos[1].x, vertices.elementos[1].y);
+					outtextxy(15, 45, buffer);
+
+					sprintf(buffer, "C -> x: %d y: %d", vertices.elementos[2].x, vertices.elementos[2].y);
+					outtextxy(15, 60, buffer);
+
 					DibujarVertices(&vertices, COLOR_VERTICE);
 				}
 				input = '';
@@ -105,9 +165,9 @@ int main()
 			cleardevice();
 			AgregarVertice(&vertices, &raton.posicion);
 
-			sprintf(numeroDePuntos, "Puntos: %d", vertices.longitud);
+			sprintf(buffer, "Puntos: %d", vertices.longitud);
 			setcolor(WHITE);
-			outtextxy(15, 15, numeroDePuntos);
+			outtextxy(15, 15, buffer);
 
 			/* dibujando vertices */
 			mocultar();
@@ -136,9 +196,9 @@ int main()
 			DibujarVertices(&vertices, COLOR_VERTICE);
 			mver();
 
-			sprintf(numeroDePuntos, "Puntos: %d", vertices.longitud);
+			sprintf(buffer, "Puntos: %d", vertices.longitud);
 			setcolor(WHITE);
-			outtextxy(15, 15, numeroDePuntos);
+			outtextxy(15, 15, buffer);
 
 			raton.operacionClickDerecho = Hecho;
 		}
