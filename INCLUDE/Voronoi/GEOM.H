@@ -14,15 +14,26 @@
 #define true 1
 #define false 0
 
+#define RADIO_VERTICE 2
+
+#define VCOLOR_TRIANGULO_ACTUAL LIGHTBLUE
+#define VCOLOR_PUNTO_DESCARTADO RED
+#define VCOLOR_PUNTO_EXTREMO GREEN
+
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
 
-#define RADIO_VERTICE 2
+/* distintos modos de los algoritmos */
+typedef enum Modo
+{
+    descriptivo,
+    rapido
+} Modo;
 
 /* representa un vertice / punto / vector en el plano 
  * utiliza double para mayor presicion en calculos matematicos */
 typedef struct Vertice{
-	double x, y;
+	int x, y;
     bool extremo;
 } Vertice;
 
@@ -39,9 +50,9 @@ typedef struct Vertices
 } Vertices;
 
 /* inicializa un vertice */
-Vertice newVertice(double x, double y);
+Vertice newVertice(int x, int y);
 /* inicializa un segmento */
-Segmento newSegmento(double ax, double ay, double bx, double by);
+Segmento newSegmento(int ax, int ay, int bx, int by);
 /* inicializa una coleccion de vertices */
 Vertices newVertices(int longitud);
 /* Agrega un vertice a la coleccion de vertices */
@@ -55,12 +66,16 @@ void RemoverVertices(Vertices *v);
 void DibujarVertice(Vertice *v, enum COLORS color);
 /* dibuja un segmento con su color */
 void DibujarSegmento(Segmento *s, enum COLORS color);
+/* dibujar segmento dado un par de vertices */
+void DibujarSegmentoApartirDeVertices(Vertice *v1, Vertice *v2, enum COLORS color);
 /* dibuja una coleccion de vertices con su color */
 void DibujarVertices(Vertices *v, enum COLORS color);
+/* Dibuja los puntos extremos una vez han sido definidos */
+void DibujarPuntosExtremos(Vertices *v, enum COLORS color, enum COLORS colorNoExtremo);
 
 /* funciones geometricas */
 /* calcula el doble del area de un triangulo utilizando la determinante */
-int Area2(Vertice *a, Vertice *b, Vertice *c);
+float Area2(Vertice *a, Vertice *b, Vertice *c);
 
 /* usa el signo de la determinante de un triangulo
 para determinar si c esta a la izquierda del segmento ab */
@@ -68,6 +83,10 @@ bool EnLaIzquierda(Vertice *a, Vertice* b, Vertice *c);
 
 /* determina si el punto d se encuentra dentro de el triangulo abc */
 bool EnTriangulo(Vertice* a, Vertice* b, Vertice* c, Vertice* d);
+
+/*  determina los puntos extremos y dibuja la envolvente convexa,
+    este algoritmo es muy lento, tiene una complejidad de O(n^4) */
+void EnvolventeConvexaLento(Vertices *v, Modo modo);
 
 #include <Voronoi\geom.c>
 

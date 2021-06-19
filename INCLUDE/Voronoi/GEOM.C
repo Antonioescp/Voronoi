@@ -1,7 +1,7 @@
 #include <Voronoi\geom.h>
 
 /* inicializa un vertice */
-Vertice newVertice(double x, double y)
+Vertice newVertice(int x, int y)
 {
 	Vertice v;
 
@@ -13,7 +13,7 @@ Vertice newVertice(double x, double y)
 }
 
 /* inicializa un segmento */
-Segmento newSegmento(double ax, double ay, double bx, double by)
+Segmento newSegmento(int ax, int ay, int bx, int by)
 {
 	Segmento s;
 
@@ -107,6 +107,13 @@ void DibujarSegmento(Segmento *s, enum COLORS color)
 	line(s->a.x, s->a.y, s->b.x, s->b.y);
 }
 
+/* dibujar segmento dado un par de vertices */
+void DibujarSegmentoApartirDeVertices(Vertice *v1, Vertice *v2, enum COLORS color)
+{
+	setcolor(color);
+	line(v1->x, v1->y, v2->x, v2->y);
+}
+
 /* dibuja una coleccion de vertices con su color */
 void DibujarVertices(Vertices *v, enum COLORS color)
 {
@@ -120,13 +127,33 @@ void DibujarVertices(Vertices *v, enum COLORS color)
 	}
 }
 
+/* Dibuja los puntos extremos una vez han sido definidos */
+void DibujarPuntosExtremos(Vertices *v, enum COLORS color, enum COLORS colorNoExtremo)
+{
+	int i;
+	for(i = 0; i < v->longitud; i++)
+	{
+		if(v->elementos[i].extremo)
+			DibujarVertice(&v->elementos[i], color);
+		else
+			DibujarVertice(&v->elementos[i], colorNoExtremo);
+	}
+}
+
 /* funciones geometricas */
 /* calcula el doble del area de un triangulo utilizando la determinante */
-int Area2(Vertice *a, Vertice *b, Vertice *c)
+float Area2(Vertice *a, Vertice *b, Vertice *c)
 {
-	int area2 = a->x * b->y - a->y * b->x + b->x * c->y - b->y * c->x + c->x * a->y - c->y * a->x;
+	float ax = a->x;
+	float ay = a->y;
+	float bx = b->x;
+	float by = b->y;
+	float cx = c->x;
+	float cy = c->y;
 
-	return area2;
+	return 		ax * by - ay * bx
+			+	bx * cy - by * cx
+			+	cx * ay - cy * ax;
 }
 
 /* usa el signo de la determinante de un triangulo
@@ -144,5 +171,51 @@ bool EnTriangulo(Vertice* a, Vertice* b, Vertice* c, Vertice* d)
 	bool caIzquierda = EnLaIzquierda(c, a, d);
 
 	return abIzquierda == bcIzquierda && bcIzquierda == caIzquierda;
+}
+
+/*  determina los puntos extremos y dibuja la envolvente convexa,
+    este algoritmo es muy lento, tiene una complejidad de O(n^4) */
+void EnvolventeConvexaLento(Vertices *v, Modo modo)
+{
+	int a, b, c, d;
+
+	/* en buena fe marcamos todos los puntos como extremos */
+	for(a = 0; a < v->longitud; a++)
+		v->elementos[a].extremo = true;
+	
+	/* ahora empezamos a iterar en los posibles triangulos */
+	for(a = 0; a < v->longitud; a++)
+	{
+		for(b = a + 1; b < v->longitud; b++)
+		{
+			for(c = b + 1; c < v->longitud; c++)
+			{
+				for(d = 0; d < v->longitud; d++)
+				{
+					/* evitamos revisar los puntos que forman el triangulo actual o los
+						puntos extremos */
+					if(d == a || d == b || d == c || !v->elementos[d].extremo)
+						continue;
+
+					if(modo == descriptivo)
+					{
+						cleardevice();
+						DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_TRIANGULO_ACTUAL);
+						DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[c], VCOLOR_TRIANGULO_ACTUAL);
+						DibujarSegmentoApartirDeVertices(&v->elementos[c], &v->elementos[a], VCOLOR_TRIANGULO_ACTUAL);
+
+						DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
+					}
+
+					/* revisamos si el punto d se encuentra en el triangulo abc, si lo esta, entonces
+						no es extremo */
+					if( EnTriangulo(&v->elementos[a], &v->elementos[b], &v->elementos[c], &v->elementos[d]) )
+					{
+						v->elementos[d].extremo = false;
+					}
+				}
+			}
+		}
+	}
 }
 
