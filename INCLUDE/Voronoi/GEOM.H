@@ -22,6 +22,7 @@
 #define VCOLOR_PUNTO_EXTREMO GREEN
 #define VCOLOR_PUNTO_ACTUAL CYAN
 #define VCOLOR_LADO_ACTUAL BROWN
+#define VCOLOR_LADO_EXTREMO BROWN
 
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
@@ -38,6 +39,7 @@ typedef enum Modo
 typedef struct Vertice{
 	int x, y;
     bool extremo;
+    int sucesor;
 } Vertice;
 
 /* Un segmento en el plano, con sus puntos / vertices a y b */
@@ -87,6 +89,9 @@ bool EnLaIzquierda(Vertice *a, Vertice* b, Vertice *c);
 bool EnTriangulo(Vertice* a, Vertice* b, Vertice* c, Vertice* d);
 /* Revisa que el lado tenga puntos solo en un medio plano y no en el otro */
 void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
+/* Busca el punto mas bajo y el mas a la izquierda de haber dos puntos mas bajos en y */
+/* lowest-then-leftmost */
+int LTL(Vertices* v);
 
 /*  determina los puntos extremos y dibuja la envolvente convexa,
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */
@@ -94,6 +99,8 @@ void PuntosExtremosLento(Vertices *v, Modo modo, int retraso);
 /* determina la envolvente convexa buscando los lados extremos, en lugar de puntos,
 este algoritmo es O(n^3) */
 void LadosExtremos(Vertices *v, Modo modo, int retraso);
+/* utiliza el algoritmo de la marcha de jarvis O(n^2) o envoltura de regalo */
+void Jarvis(Vertices *v, Modo modo, int retraso);
 
 #include <Voronoi\geom.c>
 

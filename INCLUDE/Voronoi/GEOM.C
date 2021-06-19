@@ -189,8 +189,6 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso)
 			if(modo == descriptivo)
 			{
 				DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_LADO_ACTUAL);
-				DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[i], VCOLOR_TRIANGULO_ACTUAL);
-				DibujarSegmentoApartirDeVertices(&v->elementos[i], &v->elementos[a], VCOLOR_TRIANGULO_ACTUAL);
 
 				DibujarVertice(&v->elementos[i], VCOLOR_PUNTO_ACTUAL);
 				delay(retraso);
@@ -205,8 +203,6 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso)
 		if(modo == descriptivo)
 		{
 			DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], getbkcolor());
-			DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[i], getbkcolor());
-			DibujarSegmentoApartirDeVertices(&v->elementos[i], &v->elementos[a], getbkcolor());
 
 			DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
 		}
@@ -216,7 +212,31 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso)
 	{
 		v->elementos[a].extremo = true;
 		v->elementos[b].extremo = true;
+
+		DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_LADO_EXTREMO);
 	}
+}
+
+/* Busca el punto mas bajo y el mas a la izquierda de haber dos puntos mas bajos en y */
+/* lowest-then-leftmost */
+int LTL(Vertices* v)
+{
+    /* el primer extremo, tomaremos el primero momentaneamente */
+    int ltl = 0;
+
+    /* probando todos los puntos */
+    int k;
+    for(k = 1; k < v->longitud; k++)
+    {
+        /* mas bajo then mas a la izquierda */
+        if(  v->elementos[k].y < v->elementos[ltl].y || 
+            (v->elementos[k].y == v->elementos[ltl].y && v->elementos[k].x < v->elementos[ltl].x))
+        {
+            ltl = k;
+        }
+    }
+
+    return ltl;
 }
 
 /*  determina los puntos extremos y dibuja la envolvente convexa,
@@ -298,5 +318,57 @@ void LadosExtremos(Vertices *v, Modo modo, int retraso)
 			RevisarLado(v, a, b, modo, retraso);
 		}
 	}
+}
+
+/* utiliza el algoritmo de la marcha de jarvis O(n^2) o envoltura de regalo */
+void Jarvis(Vertices *v, Modo modo, int retraso)
+{
+	/* ahora calculamos el primer punto extremo */
+	int ltl;
+	int s, t, k;
+
+	/* empezamos por marcarlos a todos como no extremos */
+	for(k = 0; k < v->longitud; k++)
+		v->elementos[k].extremo = false;
+
+	ltl = LTL(v);
+	k = ltl;
+
+	/* y buscamos los demas puntos extremos */
+	do
+	{
+		v->elementos[k].extremo = true;
+		s = -1;
+
+		/* revisando cada punto */
+		for(t = 0; t < v->longitud; t++) 
+		{
+			if( t != k && t != s && 
+				(s == -1 || ! EnLaIzquierda(&v->elementos[k], &v->elementos[s], &v->elementos[t]) ) )
+			{
+				if(modo == descriptivo)
+				{
+					DibujarSegmentoApartirDeVertices(&v->elementos[k], &v->elementos[t], VCOLOR_LADO_EXTREMO);
+
+					DibujarVertice(&v->elementos[t], VCOLOR_PUNTO_ACTUAL);
+					delay(retraso);
+
+					DibujarSegmentoApartirDeVertices(&v->elementos[k], &v->elementos[t], getbkcolor());
+
+					DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
+				}
+				s = t;
+			}
+		}
+
+		/* dibujando envolvente */
+		DibujarSegmentoApartirDeVertices(&v->elementos[k], &v->elementos[s], VCOLOR_LADO_EXTREMO);
+
+		v->elementos[k].sucesor = s;
+		k = s;
+	}while(k != ltl);
+
+	if(modo == descriptivo)
+		DibujarSegmentoApartirDeVertices(&v->elementos[ltl], &v->elementos[v->elementos[k].sucesor], VCOLOR_LADO_EXTREMO);
 }
 

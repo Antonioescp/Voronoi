@@ -61,6 +61,15 @@ int main()
 		/* manejando entrada de teclado */
 		switch(input)
 		{
+			case 'j':
+				mocultar();
+				Jarvis(&vertices, modoDePresentacion, retraso);
+
+				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
+				mver();
+
+				input = '';
+				break;
 			/* para aumentar y disminuir el retraso */
 			case 'p':
 				cleardevice();
@@ -107,9 +116,8 @@ int main()
 				
 				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
 				LadosExtremos(&vertices, modoDePresentacion, retraso);
-
-				cleardevice();
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
+
 				mver();
 				input = '';
 				break;
