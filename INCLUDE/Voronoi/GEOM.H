@@ -90,10 +90,10 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
 
 /*  determina los puntos extremos y dibuja la envolvente convexa,
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */
-void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso);
+void PuntosExtremosLento(Vertices *v, Modo modo, int retraso);
 /* determina la envolvente convexa buscando los lados extremos, en lugar de puntos,
-este algoritmo es O(n log n) */
-void EnvolventeConvexa(Vertices *v, Modo modo, int retraso);
+este algoritmo es O(n^3) */
+void LadosExtremos(Vertices *v, Modo modo, int retraso);
 
 #include <Voronoi\geom.c>
 

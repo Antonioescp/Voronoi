@@ -221,7 +221,7 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso)
 
 /*  determina los puntos extremos y dibuja la envolvente convexa,
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */
-void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso)
+void PuntosExtremosLento(Vertices *v, Modo modo, int retraso)
 {
 	int a, b, c, d;
 
@@ -236,6 +236,14 @@ void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso)
 		{
 			for(c = b + 1; c < v->longitud; c++)
 			{
+
+				if(modo == descriptivo)
+				{
+					DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_TRIANGULO_ACTUAL);
+					DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[c], VCOLOR_TRIANGULO_ACTUAL);
+					DibujarSegmentoApartirDeVertices(&v->elementos[c], &v->elementos[a], VCOLOR_TRIANGULO_ACTUAL);
+				}
+
 				for(d = 0; d < v->longitud; d++)
 				{
 					/* evitamos revisar los puntos que forman el triangulo actual o los
@@ -245,12 +253,10 @@ void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso)
 
 					if(modo == descriptivo)
 					{
-						DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_TRIANGULO_ACTUAL);
-						DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[c], VCOLOR_TRIANGULO_ACTUAL);
-						DibujarSegmentoApartirDeVertices(&v->elementos[c], &v->elementos[a], VCOLOR_TRIANGULO_ACTUAL);
-
 						DibujarVertice(&v->elementos[d], VCOLOR_PUNTO_ACTUAL);
 						delay(retraso);
+
+						DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
 					}
 
 					/* revisamos si el punto d se encuentra en el triangulo abc, si lo esta, entonces
@@ -259,15 +265,15 @@ void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso)
 					{
 						v->elementos[d].extremo = false;
 					}
+				}
 
-					if(modo == descriptivo)
-					{
-						DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], getbkcolor());
-						DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[c], getbkcolor());
-						DibujarSegmentoApartirDeVertices(&v->elementos[c], &v->elementos[a], getbkcolor());
+				if(modo == descriptivo)
+				{
+					DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], getbkcolor());
+					DibujarSegmentoApartirDeVertices(&v->elementos[b], &v->elementos[c], getbkcolor());
+					DibujarSegmentoApartirDeVertices(&v->elementos[c], &v->elementos[a], getbkcolor());
 
-						DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
-					}
+					DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
 				}
 			}
 		}
@@ -276,7 +282,7 @@ void EnvolventeConvexaLento(Vertices *v, Modo modo, int retraso)
 
 /* determina la envolvente convexa buscando los lados extremos, en lugar de puntos,
 este algoritmo es O(n^3) */
-void EnvolventeConvexa(Vertices *v, Modo modo, int retraso)
+void LadosExtremos(Vertices *v, Modo modo, int retraso)
 {
 	int a, b;
 

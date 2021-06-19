@@ -106,7 +106,7 @@ int main()
 				mocultar();
 				
 				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
-				EnvolventeConvexa(&vertices, modoDePresentacion, retraso);
+				LadosExtremos(&vertices, modoDePresentacion, retraso);
 
 				cleardevice();
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
@@ -118,7 +118,7 @@ int main()
 				mocultar();
 
 				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
-				EnvolventeConvexaLento(&vertices, modoDePresentacion, retraso);
+				PuntosExtremosLento(&vertices, modoDePresentacion, retraso);
 
 				cleardevice();
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
