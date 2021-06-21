@@ -66,9 +66,11 @@ int main()
 		{
 			case 'j':
 				mocultar();
+				
 				Jarvis(&vertices, modoDePresentacion, retraso);
 
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
+				
 				mver();
 
 				input = '';
@@ -85,6 +87,8 @@ int main()
 				input = '';
 				break;
 			case 'o':
+				mocultar();
+
 				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE);
 
@@ -92,10 +96,13 @@ int main()
 
 				sprintf(buffer, "Retraso: %dms", retraso);
 				outtextxy(15, 15, buffer);
+
+				mver();
 				input = '';
 				break;
 			/* Alterna el modo de presentacion de los algoritmos */
 			case 'm':
+				mocultar();
 				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE);
 				if(modoDePresentacion == descriptivo)
@@ -111,6 +118,8 @@ int main()
 
 				setcolor(WHITE);
 				outtextxy(15, 15, buffer);
+
+				mver();
 				input = '';
 				break;
 			/* determina lados extremos */

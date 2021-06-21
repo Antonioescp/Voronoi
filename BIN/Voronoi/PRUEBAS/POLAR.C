@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <conio.h>
 #include <graphics.h>
+#include <time.h>
+#include <stdlib.h>
 
 /* convexhull */
 #include <voronoi\ch.h>
@@ -8,6 +10,11 @@
 /****************************************************************
  * Este archivo pone a prueba el ordenamiento por angulo polar
  * ******************************************************************/
+
+Vertice PuntoAleatorio(const int maxX, const int maxY)
+{
+	return newVertice( rand() % maxX + 1, rand() % maxY + 1 );
+}
 
 void MostrarVertices(Vertices *v)
 {
@@ -42,12 +49,24 @@ void AV(Vertices *v, Vertice v1)
 		v->elementos[v->longitud - 1] = v1;
 }
 
+void Shuffle(Vertices *v, int n)
+{
+	int i;
+	RemoverVertices(v);
+
+	for(i = 0; i < n; i++)
+		AV(v, PuntoAleatorio(getmaxx(), getmaxy()));
+}
+
 int main()
 {
 	int gd = DETECT, gm;
 
 	Vertices v;
 	char input = '';
+	int numeroDePuntos = 1;
+
+	srand(time(NULL));
 
 	initgraph(&gd, &gm, "");
 
@@ -66,15 +85,28 @@ int main()
 	MostrarVertices(&v);
 	getch();
 
+	cleardevice();
+
+	OrdenarPorAnguloPolar(&v);
+	MostrarVertices(&v);
+
+	getch();
+
 	while(input != 'q')
 	{
 		cleardevice();
 
 		OrdenarPorAnguloPolar(&v);
 		MostrarVertices(&v);
-		
+
 		input = getch();
+
+		if(input == 's')
+		{
+			Shuffle(&v, numeroDePuntos++);
+		}
 	}
+
 	
 	closegraph();
 	return 0;

@@ -16,6 +16,8 @@ este algoritmo es O(n^3) */
 void LadosExtremos(Vertices *v, Modo modo, int retraso);
 /* utiliza el algoritmo de la marcha de jarvis O(n^2) o envoltura de regalo */
 void Jarvis(Vertices *v, Modo modo, int retraso);
+/* utiliza el algoritmo de graham para dibujar la envolvente convexa O(n log n) */
+void Graham(Vertices *v);
 
 #include <voronoi\ch.c>
 

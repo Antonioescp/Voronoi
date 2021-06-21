@@ -163,4 +163,30 @@ void Jarvis(Vertices *v, Modo modo, int retraso)
 		DibujarSegmentoApartirDeVertices(&v->elementos[ltl], &v->elementos[v->elementos[k].sucesor], VCOLOR_LADO_EXTREMO);
 }
 
+/* utiliza el algoritmo de graham para dibujar la envolvente convexa O(n log n) */
+void Graham(Vertices *v)
+{
+	/* stacks */
+	/* en el paso de inicializacion, despues de ordenar por angulo polar
+	los primeros dos elementos son puestos en S y los otros n-2 puntos en T 
+	en orden inverso de manera que el elemento 3 quede en el tope */
+	Vertices s = newVertices(v->longitud);
+	Vertices t = newVertices(v->longitud);
+
+	int i;
+
+	/* preprocesado */
+	OrdenarPorAnguloPolar(v);
+
+	/* agregando elementos a stack 
+		agregando manualmente para eficiencia */
+	StackVerticePush(&s, &v->elementos[0]);
+	StackVerticePush(&s, &v->elementos[1]);
+
+	/* agregando los otros n - 2 puntos 
+		de manera inversa */
+	for(i = v->longitud - 1; i > 2 ; i--)
+		StackVerticePush(&t, &v->elementos[i]);
+}
+
 

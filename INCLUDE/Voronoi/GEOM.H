@@ -51,6 +51,7 @@ typedef struct Segmento{
 typedef struct Vertices
 {
     int longitud;
+    int stackIndice;
     Vertice *elementos;
 } Vertices;
 
@@ -66,6 +67,12 @@ void AgregarVertice(Vertices *vertices, Vertice *vertice);
 void RemoverUltimoVertice(Vertices *v);
 /* Borra una coleccion de vertices */
 void RemoverVertices(Vertices *v);
+
+/* vertices stack ds, para tratar a la coleccion de vertice como stack */
+/* agrega un elemento al stack */
+void StackVerticePush(Vertices *v, Vertice *e);
+/* elimina un elemento del stack */
+void StackVerticePop(Vertices *v);
 
 /* dibuja un vertice con su color */
 void DibujarVertice(Vertice *v, enum COLORS color);

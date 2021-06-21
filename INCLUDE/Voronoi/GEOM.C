@@ -28,6 +28,8 @@ Vertices newVertices(int longitud)
 {
 	Vertices v;
 
+	v.stackIndice = -1;
+
 	/* manteniendo longitud en el rango de numeros naturales */
 	if(longitud > 0)
 	{
@@ -90,6 +92,25 @@ void RemoverVertices(Vertices *v)
 	v->elementos = NULL;
 	v->longitud = 0;
 }
+
+/* vertices stack ds, para tratar a la coleccion de vertice como stack */
+/* agrega un elemento al stack */
+void StackVerticePush(Vertices *v, Vertice *e)
+{
+	v->stackIndice++;
+	if(v->stackIndice < v->longitud)
+		v->elementos[v->stackIndice] = *e;
+	else
+		AgregarVertice(v, e);
+}
+
+/* elimina un elemento del stack */
+void StackVerticePop(Vertices *v)
+{
+	if(v->stackIndice > -1)
+		v->stackIndice--;
+}
+
 
 /* dibuja un vertice con su color */
 void DibujarVertice(Vertice *v, enum COLORS color)
@@ -180,16 +201,17 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso)
 
 	bool izquierdaVacio = true, derechaVacio = true;
 
+	if(modo == descriptivo)
+	{
+		DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_LADO_ACTUAL);
+	}
+
 	for(i = 0; i < v->longitud; i++)
 	{
-
-
 		if(i != a && i != b)
 		{
 			if(modo == descriptivo)
 			{
-				DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], VCOLOR_LADO_ACTUAL);
-
 				DibujarVertice(&v->elementos[i], VCOLOR_PUNTO_ACTUAL);
 				delay(retraso);
 			}
@@ -197,15 +219,15 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso)
 			if(EnLaIzquierda(&v->elementos[a], &v->elementos[b], &v->elementos[i]))
 				izquierdaVacio = false;
 			else
-				derechaVacio = false ;
+				derechaVacio = false;
 		}
-			
-		if(modo == descriptivo)
-		{
-			DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], getbkcolor());
+	}
 
-			DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
-		}
+	if(modo == descriptivo)
+	{
+		DibujarSegmentoApartirDeVertices(&v->elementos[a], &v->elementos[b], getbkcolor());
+
+		DibujarPuntosExtremos(v, VCOLOR_PUNTO_EXTREMO, VCOLOR_PUNTO_DESCARTADO);
 	}
 
 	if(izquierdaVacio || derechaVacio)
