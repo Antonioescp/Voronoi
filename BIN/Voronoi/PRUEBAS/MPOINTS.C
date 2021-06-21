@@ -7,6 +7,9 @@
 #include <voronoi\geom.h>
 #include <voronoi\ui.h>
 
+/* convexhull */
+#include <voronoi\ch.h>
+
 #define COLOR_VERTICE WHITE
 #define COLOR_VERTICE_MEDIO RED
 #define COLOR_CONVEX_HULL GREEN

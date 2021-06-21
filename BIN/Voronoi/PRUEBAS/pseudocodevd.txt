@@ -1,0 +1,13 @@
+DacVoronoi(S, n)
+	x-sort todos los puntos en
+		S = { p1, p2, ... pn }
+
+	return dacVD(S, 1, n)
+
+se ponen los puntos en un proceso recursivo
+dacVD(S, i, j)
+	probando que los indices esten cerca
+	if(j - i < 3)
+		trivialVD(S, i, j)
+	else
+		merge(dacVD( S, i, (i + j) / 2 ), dacVD( S, (i + j) / 2 + 1, j))

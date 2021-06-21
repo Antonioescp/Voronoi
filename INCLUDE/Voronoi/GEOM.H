@@ -93,15 +93,6 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
 /* lowest-then-leftmost */
 int LTL(Vertices* v);
 
-/*  determina los puntos extremos y dibuja la envolvente convexa,
-    este algoritmo es muy lento, tiene una complejidad de O(n^4) */
-void PuntosExtremosLento(Vertices *v, Modo modo, int retraso);
-/* determina la envolvente convexa buscando los lados extremos, en lugar de puntos,
-este algoritmo es O(n^3) */
-void LadosExtremos(Vertices *v, Modo modo, int retraso);
-/* utiliza el algoritmo de la marcha de jarvis O(n^2) o envoltura de regalo */
-void Jarvis(Vertices *v, Modo modo, int retraso);
-
 #include <Voronoi\geom.c>
 
 #endif
