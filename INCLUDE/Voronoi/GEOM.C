@@ -29,6 +29,7 @@ Vertices newVertices(int longitud)
 	Vertices v;
 
 	v.stackIndice = -1;
+	v.vacio = true;
 
 	/* manteniendo longitud en el rango de numeros naturales */
 	if(longitud > 0)
@@ -98,6 +99,8 @@ void RemoverVertices(Vertices *v)
 void StackVerticePush(Vertices *v, Vertice *e)
 {
 	v->stackIndice++;
+	v->vacio = false;
+
 	if(v->stackIndice < v->longitud)
 		v->elementos[v->stackIndice] = *e;
 	else
@@ -105,10 +108,22 @@ void StackVerticePush(Vertices *v, Vertice *e)
 }
 
 /* elimina un elemento del stack */
-void StackVerticePop(Vertices *v)
+Vertice* StackVerticePop(Vertices *v)
 {
+	Vertice* popped = NULL;
+
 	if(v->stackIndice > -1)
-		v->stackIndice--;
+		popped = &v->elementos[v->stackIndice];
+
+	v->stackIndice--;
+
+	if(v->stackIndice <= -1)
+	{
+		v->stackIndice = -1;
+		v->vacio = true;
+	}
+	
+	return popped;
 }
 
 
@@ -159,6 +174,28 @@ void DibujarPuntosExtremos(Vertices *v, enum COLORS color, enum COLORS colorNoEx
 		else
 			DibujarVertice(&v->elementos[i], colorNoExtremo);
 	}
+}
+
+/* Dibuja un poligono dado los vertices */
+void DibujarPoligonoDeStack(Vertices *v)
+{
+	int i;
+	for(i = 0;i <= v->stackIndice - 1; i++)
+	{
+		DibujarVertice(&v->elementos[i], VCOLOR_PUNTO_EXTREMO);
+		DibujarSegmentoApartirDeVertices(&v->elementos[i], &v->elementos[i + 1], VCOLOR_LADO_EXTREMO);
+	}
+
+	DibujarVertice(&v->elementos[i], VCOLOR_PUNTO_EXTREMO);
+	DibujarSegmentoApartirDeVertices(&v->elementos[i], &v->elementos[0], VCOLOR_LADO_EXTREMO);
+}
+
+/* dibuja los puntos de un stack */
+void DibujarPuntosDeStack(Vertices *v, enum COLORS color)
+{
+	int i;
+	for(i = 0; i <= v->stackIndice; i++)
+		DibujarVertice(&v->elementos[i], color);
 }
 
 /* funciones geometricas */

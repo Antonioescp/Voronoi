@@ -12,9 +12,6 @@
  * las mismas estructuras.
  * ***********************************************************************************/
 
-#define true 1
-#define false 0
-
 #define RADIO_VERTICE 2
 
 #define VCOLOR_TRIANGULO_ACTUAL LIGHTBLUE
@@ -23,6 +20,9 @@
 #define VCOLOR_PUNTO_ACTUAL CYAN
 #define VCOLOR_LADO_ACTUAL BROWN
 #define VCOLOR_LADO_EXTREMO BROWN
+
+#define true 1
+#define false 0
 
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
@@ -51,8 +51,11 @@ typedef struct Segmento{
 typedef struct Vertices
 {
     int longitud;
-    int stackIndice;
     Vertice *elementos;
+
+    /* soporte para stack */
+    int stackIndice;
+    bool vacio;
 } Vertices;
 
 /* inicializa un vertice */
@@ -72,7 +75,7 @@ void RemoverVertices(Vertices *v);
 /* agrega un elemento al stack */
 void StackVerticePush(Vertices *v, Vertice *e);
 /* elimina un elemento del stack */
-void StackVerticePop(Vertices *v);
+Vertice* StackVerticePop(Vertices *v);
 
 /* dibuja un vertice con su color */
 void DibujarVertice(Vertice *v, enum COLORS color);
@@ -84,6 +87,10 @@ void DibujarSegmentoApartirDeVertices(Vertice *v1, Vertice *v2, enum COLORS colo
 void DibujarVertices(Vertices *v, enum COLORS color);
 /* Dibuja los puntos extremos una vez han sido definidos */
 void DibujarPuntosExtremos(Vertices *v, enum COLORS color, enum COLORS colorNoExtremo);
+/* Dibuja un poligono dado los vertices */
+void DibujarPoligonoDeStack(Vertices *v);
+/* dibuja los puntos de un stack */
+void DibujarPuntosDeStack(Vertices *v, enum COLORS color);
 
 /* funciones geometricas */
 /* calcula el doble del area de un triangulo utilizando la determinante */

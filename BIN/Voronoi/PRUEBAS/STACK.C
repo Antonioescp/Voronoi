@@ -47,6 +47,8 @@ int main()
 	Vertices s;
 	Vertices t;
 
+	Vertices popped;
+
 	int i;
 
 	srand(time(NULL));
@@ -73,7 +75,11 @@ int main()
 	clrscr();
 	t = newVertices(vertices.longitud - 2);
 
-	for(i = vertices.longitud - 1; i > 2; i--)
+	popped = newVertices(t.longitud + s.stackIndice + 1);
+	StackVerticePush(&popped, StackVerticePop(&s));
+	StackVerticePush(&popped, StackVerticePop(&s));
+
+	for(i = vertices.longitud - 1; i > 1; i--)
 		StackVerticePush(&t, &vertices.elementos[i]);
 
 	MostrarStack(&t);
@@ -81,13 +87,22 @@ int main()
 	getch();
 	clrscr();
 
-	while(t.stackIndice > -1)
+	while(!t.vacio)
 	{
-		StackVerticePop(&t);
+		StackVerticePush(&popped, StackVerticePop(&t));
 		MostrarStack(&t);
 
 		getch();
 	}
+
+	clrscr();
+	MostrarStack(&popped);
+	getch();
+
+	RemoverVertices(&s);
+	RemoverVertices(&t);
+	RemoverVertices(&vertices);
+	RemoverVertices(&popped);
 	
 	return 0;
 }

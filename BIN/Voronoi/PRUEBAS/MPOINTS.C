@@ -64,9 +64,23 @@ int main()
 		/* manejando entrada de teclado */
 		switch(input)
 		{
+			/* utiliza el algoritmo de graham para dibujar la envolvente convexa */
+			case 'g':
+				mocultar();
+				cleardevice();
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO_DESCARTADO);
+
+				GrahamScan(&vertices, modoDePresentacion, retraso);
+
+				mver();
+
+				input = '';
+				break;
+			/* utiliza el algoritmo de jarvis para dibujar la envolvente */
 			case 'j':
 				mocultar();
-				
+
 				Jarvis(&vertices, modoDePresentacion, retraso);
 
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
