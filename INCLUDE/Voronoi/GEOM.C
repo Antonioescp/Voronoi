@@ -218,7 +218,7 @@ float Area2(Vertice *a, Vertice *b, Vertice *c)
 para determinar si c esta a la izquierda del segmento ab */
 bool EnLaIzquierda(Vertice *a, Vertice* b, Vertice *c)
 {
-	return (Area2(a, b, c) > 0);
+	return !(Area2(a, b, c) > 0);
 }
 
 /* determina si el punto d se encuentra dentro de el triangulo abc */

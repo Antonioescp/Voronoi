@@ -3,10 +3,20 @@
 
 #include <voronoi\geom.h>
 
+/* para elegir la coordenada en la que se ordenaran los puntos */
+typedef enum Coordenada
+{
+    coordenadaX,
+    coordenadaY
+} Coordenada;
+
 /* ordena los vertices por angulo polar apartir del punto
 menor con respecto a Y y con respecto a X de haber n puntos iguales
 menores en Y (LTL), se utiliza en el escaneo de Graham */
 void OrdenarPorAnguloPolar(Vertices *v);
+
+/* ordena los puntos de menor a mayor con respecto a x */
+void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada);
 
 /*  determina los puntos extremos con pruebas in-triangle
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */

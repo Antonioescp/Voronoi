@@ -21,12 +21,54 @@ void OrdenarPorAnguloPolar(Vertices *v)
 	{
 		for(j = 1; j < v->longitud - 1; j++)
 		{
-			if(EnLaIzquierda(&v->elementos[0], &v->elementos[j], &v->elementos[j + 1]))
+			if(!EnLaIzquierda(&v->elementos[0], &v->elementos[j], &v->elementos[j + 1]))
 			{
 				temp = v->elementos[j + 1];
 				v->elementos[j + 1] = v->elementos[j];
 				v->elementos[j] = temp;
 			}
+		}
+	}
+}
+
+/* ordena los puntos de menor a mayor con respecto a x */
+void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada)
+{
+	Vertice temp;
+	int i, j;
+	int ltl = LTL(v);
+
+	/* poniendo el ltl como el primero */
+	temp = v->elementos[ltl];
+	v->elementos[ltl] = v->elementos[0];
+	v->elementos[0] = temp;
+
+	/* 	recordar-cambiar por merge sort 
+	 	ordenando cada punto en sentido anti-horario 
+		bubble sort O(n^2)*/
+	for(i = 1; i < v->longitud; i++)
+	{
+		for(j = 1; j < v->longitud - 1; j++)
+		{
+			if(coordenada == coordenadaX)
+			{
+				if(v->elementos[j].x > v->elementos[j + 1].x)
+				{
+					temp = v->elementos[j + 1];
+					v->elementos[j + 1] = v->elementos[j];
+					v->elementos[j] = temp;
+				}
+			}
+			else
+			{
+				if(v->elementos[j].y > v->elementos[j + 1].y)
+				{
+					temp = v->elementos[j + 1];
+					v->elementos[j + 1] = v->elementos[j];
+					v->elementos[j] = temp;
+				}
+			}
+			
 		}
 	}
 }
@@ -201,20 +243,11 @@ void GrahamScan(Vertices *v, Modo modo, int retraso)
 		consiste en agregar los puntos en T al stack S
 		siempre y cuando se haga un giro hacia la izquierda,
 		si no, se elimina el ultimo punto agragado al stack s */
-	while(!t.vacio && !s.vacio)
+	while(!t.vacio)
 	{
-		if(!EnLaIzquierda(&s.elementos[s.stackIndice - 1], &s.elementos[s.stackIndice], &t.elementos[t.stackIndice]))
+		if(EnLaIzquierda(&s.elementos[s.stackIndice - 1], &s.elementos[s.stackIndice], &t.elementos[t.stackIndice]))
 		{
 			StackVerticePush(&s, StackVerticePop(&t));
-
-			if(modo == descriptivo)
-			{
-				DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &s.elementos[s.stackIndice - 1], VCOLOR_LADO_EXTREMO);
-				DibujarVertice(&s.elementos[s.stackIndice], VCOLOR_PUNTO_ACTUAL);
-				delay(retraso);
-
-				DibujarVertice(&s.elementos[s.stackIndice], VCOLOR_PUNTO_EXTREMO);
-			}
 		}
 		else
 		{
@@ -226,12 +259,27 @@ void GrahamScan(Vertices *v, Modo modo, int retraso)
 
 			StackVerticePop(&s);
 		}
+
+		if(modo == descriptivo)
+		{
+				DibujarVertice(&s.elementos[s.stackIndice], VCOLOR_PUNTO_EXTREMO);
+				DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &s.elementos[s.stackIndice - 1], VCOLOR_LADO_EXTREMO);
+
+				DibujarVertice(&t.elementos[t.stackIndice], VCOLOR_PUNTO_ACTUAL);
+
+				if(!t.vacio)
+					DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &t.elementos[t.stackIndice], VCOLOR_TRIANGULO_ACTUAL);
+				
+				delay(retraso);
+
+				if(!t.vacio)
+					DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &t.elementos[t.stackIndice], getbkcolor());
+		}
 	}
 
 	if(modo != descriptivo)
 		DibujarPoligonoDeStack(&s);
-	
-	if(modo == descriptivo)
+	else
 	{
 		DibujarPuntosDeStack(&s, VCOLOR_PUNTO_EXTREMO);
 		DibujarSegmentoApartirDeVertices(&s.elementos[0], &s.elementos[s.stackIndice], VCOLOR_LADO_EXTREMO);

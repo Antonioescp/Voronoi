@@ -80,6 +80,9 @@ int main()
 			/* utiliza el algoritmo de jarvis para dibujar la envolvente */
 			case 'j':
 				mocultar();
+				cleardevice();
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO_DESCARTADO);
 
 				Jarvis(&vertices, modoDePresentacion, retraso);
 
@@ -172,6 +175,7 @@ int main()
 			case 'a':
 				if(vertices.longitud >= 3)
 				{
+					mocultar();
 					cleardevice();
 					setcolor(WHITE);
 
@@ -187,7 +191,13 @@ int main()
 					sprintf(buffer, "C -> x: %d y: %d", vertices.elementos[2].x, vertices.elementos[2].y);
 					outtextxy(15, 60, buffer);
 
+					if(EnLaIzquierda(&vertices.elementos[0], &vertices.elementos[1], &vertices.elementos[2]))
+						outtextxy(15, 75, "Esta en la izquierda");
+					else
+						outtextxy(15, 75, "No esta en la izquierda");
+
 					DibujarVertices(&vertices, COLOR_VERTICE);
+					mver();
 				}
 				input = '';
 				break;
