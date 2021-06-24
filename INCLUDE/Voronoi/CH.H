@@ -10,10 +10,17 @@ typedef enum Coordenada
     coordenadaY
 } Coordenada;
 
+
+/* calcula el punto medio de una figura */
+Vertice PuntoMedio(Vertices *v);
+
 /* ordena los vertices por angulo polar apartir del punto
 menor con respecto a Y y con respecto a X de haber n puntos iguales
 menores en Y (LTL), se utiliza en el escaneo de Graham */
 void OrdenarPorAnguloPolar(Vertices *v);
+
+/* ordena por angulo polar con respecto a un vertice */
+void OrdenarPorAnguloPolarWRTVertice(Vertices *vs, Vertice *v);
 
 /* ordena los puntos de menor a mayor con respecto a x */
 void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada);
@@ -28,6 +35,9 @@ void LadosExtremos(Vertices *v, Modo modo, int retraso);
 void Jarvis(Vertices *v, Modo modo, int retraso);
 /* utiliza el algoritmo de graham para dibujar la envolvente convexa O(n log n) */
 void Graham(Vertices *v, Modo modo, int retraso);
+
+/* upper hull */
+void UpperHullGrahamScan(Vertices *v);
 
 #include <voronoi\ch.c>
 

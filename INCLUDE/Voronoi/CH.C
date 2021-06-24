@@ -1,5 +1,23 @@
 #include <voronoi\ch.h>
 
+/* calcula el punto medio de una figura */
+Vertice PuntoMedio(Vertices *v)
+{
+    int i;
+    int x = 0;
+    int y = 0;
+    for(i = 0; i < v->longitud; i++)
+    {
+        x += v->elementos[i].x;
+        y += v->elementos[i].y;
+    }
+
+    x /= v->longitud;
+    y /= v->longitud;
+
+    return newVertice(x, y);
+}
+
 /* ordena los vertices por angulo polar apartir del punto
 menor con respecto a Y y con respecto a X de haber n puntos iguales
 menores en Y (LTL), se utiliza en el escaneo de Graham */
@@ -26,6 +44,28 @@ void OrdenarPorAnguloPolar(Vertices *v)
 				temp = v->elementos[j + 1];
 				v->elementos[j + 1] = v->elementos[j];
 				v->elementos[j] = temp;
+			}
+		}
+	}
+}
+
+/* ordena por angulo polar con respecto a un vertice */
+void OrdenarPorAnguloPolarWRTVertice(Vertices *vs, Vertice *v)
+{
+	int i, j;
+	Vertice temp;
+	
+	OrdenarPorAnguloPolar(vs);
+
+	for(i = 0; i < vs->longitud; i++)
+	{
+		for(j = 0; j < vs->longitud - 1; j++)
+		{
+			if(!EnLaIzquierda(v, &vs->elementos[j], &vs->elementos[j + 1]))
+			{
+				temp = vs->elementos[j + 1];
+				vs->elementos[j + 1] = vs->elementos[j];
+				vs->elementos[j] = temp;
 			}
 		}
 	}
@@ -262,18 +302,18 @@ void GrahamScan(Vertices *v, Modo modo, int retraso)
 
 		if(modo == descriptivo)
 		{
-				DibujarVertice(&s.elementos[s.stackIndice], VCOLOR_PUNTO_EXTREMO);
-				DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &s.elementos[s.stackIndice - 1], VCOLOR_LADO_EXTREMO);
+			DibujarVertice(&s.elementos[s.stackIndice], VCOLOR_PUNTO_EXTREMO);
+			DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &s.elementos[s.stackIndice - 1], VCOLOR_LADO_EXTREMO);
 
-				DibujarVertice(&t.elementos[t.stackIndice], VCOLOR_PUNTO_ACTUAL);
+			DibujarVertice(&t.elementos[t.stackIndice], VCOLOR_PUNTO_ACTUAL);
 
-				if(!t.vacio)
-					DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &t.elementos[t.stackIndice], VCOLOR_TRIANGULO_ACTUAL);
+			if(!t.vacio)
+				DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &t.elementos[t.stackIndice], VCOLOR_TRIANGULO_ACTUAL);
 				
-				delay(retraso);
+			delay(retraso);
 
-				if(!t.vacio)
-					DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &t.elementos[t.stackIndice], getbkcolor());
+			if(!t.vacio)
+				DibujarSegmentoApartirDeVertices(&s.elementos[s.stackIndice], &t.elementos[t.stackIndice], getbkcolor());
 		}
 	}
 
@@ -289,5 +329,4 @@ void GrahamScan(Vertices *v, Modo modo, int retraso)
 	RemoverVertices(&s);
 	RemoverVertices(&t);
 }
-
 

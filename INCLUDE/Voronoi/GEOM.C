@@ -198,16 +198,28 @@ void DibujarPuntosDeStack(Vertices *v, enum COLORS color)
 		DibujarVertice(&v->elementos[i], color);
 }
 
+/* dibuja un poligono a partir de los vertices */
+void DibujarPoligono(Vertices *v, enum COLORS color)
+{
+	int i;
+	for(i = 0; i < v->longitud - 1; i++)
+	{
+		DibujarSegmentoApartirDeVertices(&v->elementos[i], &v->elementos[i + 1], color);
+	}
+
+	DibujarSegmentoApartirDeVertices(&v->elementos[i], &v->elementos[0], color);
+}
+
 /* funciones geometricas */
 /* calcula el doble del area de un triangulo utilizando la determinante */
-float Area2(Vertice *a, Vertice *b, Vertice *c)
+double Area2(Vertice *a, Vertice *b, Vertice *c)
 {
-	float ax = a->x;
-	float ay = a->y;
-	float bx = b->x;
-	float by = b->y;
-	float cx = c->x;
-	float cy = c->y;
+	double ax = a->x;
+	double ay = a->y;
+	double bx = b->x;
+	double by = b->y;
+	double cx = c->x;
+	double cy = c->y;
 
 	return 		ax * by - ay * bx
 			+	bx * cy - by * cx

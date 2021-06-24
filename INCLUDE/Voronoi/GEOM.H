@@ -20,6 +20,8 @@
 #define VCOLOR_PUNTO_ACTUAL CYAN
 #define VCOLOR_LADO_ACTUAL BROWN
 #define VCOLOR_LADO_EXTREMO BROWN
+#define VCOLOR_LADO_POLI WHITE
+#define VCOLOR_PUNTO WHITE
 
 #define true 1
 #define false 0
@@ -91,10 +93,12 @@ void DibujarPuntosExtremos(Vertices *v, enum COLORS color, enum COLORS colorNoEx
 void DibujarPoligonoDeStack(Vertices *v);
 /* dibuja los puntos de un stack */
 void DibujarPuntosDeStack(Vertices *v, enum COLORS color);
+/* dibuja un poligono a partir de los vertices */
+void DibujarPoligono(Vertices *v, enum COLORS color);
 
 /* funciones geometricas */
 /* calcula el doble del area de un triangulo utilizando la determinante */
-float Area2(Vertice *a, Vertice *b, Vertice *c);
+double Area2(Vertice *a, Vertice *b, Vertice *c);
 
 /* usa el signo de la determinante de un triangulo
 para determinar si c esta a la izquierda del segmento ab */
