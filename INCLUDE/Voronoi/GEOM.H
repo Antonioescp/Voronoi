@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <graphics.h>
 #include <dos.h>
+#include <math.h>
 
 /************************************************************************************
  * Esta biblioteca contiene los tipos de datos geometricos utilizados en el programa,
@@ -28,6 +29,13 @@
 
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
+
+/* para elegir la coordenada en la que se ordenaran los puntos */
+typedef enum Coordenada
+{
+    coordenadaX,
+    coordenadaY
+} Coordenada;
 
 /* distintos modos de los algoritmos */
 typedef enum Modo
@@ -110,6 +118,23 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
 /* Busca el punto mas bajo y el mas a la izquierda de haber dos puntos mas bajos en y */
 /* lowest-then-leftmost */
 int LTL(Vertices* v);
+/* calcula la distancia entre dos puntos */
+int DistanciaEntrePuntos(Vertice *a, Vertice *b);
+/* calcula la distancia entre dos puntos */
+int DistanciaEntrePuntos2(int ax, int ay, int bx, int by);
+/* calcula el punto medio de una figura */
+Vertice PuntoMedio(Vertices *v);
+
+/* ordena los vertices por angulo polar apartir del punto
+menor con respecto a Y y con respecto a X de haber n puntos iguales
+menores en Y (LTL), se utiliza en el escaneo de Graham */
+void OrdenarPorAnguloPolar(Vertices *v);
+
+/* ordena por angulo polar con respecto a un vertice */
+void OrdenarPorAnguloPolarWRTVertice(Vertices *vs, Vertice *v);
+
+/* ordena los puntos de menor a mayor con respecto a x */
+void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada);
 
 #include <Voronoi\geom.c>
 

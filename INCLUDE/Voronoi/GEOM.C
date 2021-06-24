@@ -309,4 +309,123 @@ int LTL(Vertices* v)
 
     return ltl;
 }
+
+/* calcula la distancia entre dos puntos */
+int DistanciaEntrePuntos(Vertice *a, Vertice *b)
+{
+	return (int) abs(sqrt(pow(b->x - a->x, 2) + pow(b->y - a->y, 2)));
+}
+
+/* calcula la distancia entre dos puntos */
+int DistanciaEntrePuntos2(int ax, int ay, int bx, int by)
+{
+	return abs(sqrt(pow((bx - ax), 2) + pow((by - ay), 2)));
+}
+
+/* calcula el punto medio de una figura */
+Vertice PuntoMedio(Vertices *v)
+{
+    int i;
+    int x = 0;
+    int y = 0;
+    for(i = 0; i < v->longitud; i++)
+    {
+        x += v->elementos[i].x;
+        y += v->elementos[i].y;
+    }
+
+    x /= v->longitud;
+    y /= v->longitud;
+
+    return newVertice(x, y);
+}
+
+/* ordena los vertices por angulo polar apartir del punto
+menor con respecto a Y y con respecto a X de haber n puntos iguales
+menores en Y (LTL), se utiliza en el escaneo de Graham */
+void OrdenarPorAnguloPolar(Vertices *v)
+{
+	Vertice temp;
+	int i, j;
+	int ltl = LTL(v);
+
+	/* poniendo el ltl como el primero */
+	temp = v->elementos[ltl];
+	v->elementos[ltl] = v->elementos[0];
+	v->elementos[0] = temp;
+
+	/* 	recordar-cambiar por merge sort 
+	 	ordenando cada punto en sentido anti-horario 
+		bubble sort O(n^2)*/
+	for(i = 1; i < v->longitud; i++)
+	{
+		for(j = 1; j < v->longitud - 1; j++)
+		{
+			if(!EnLaIzquierda(&v->elementos[0], &v->elementos[j], &v->elementos[j + 1]))
+			{
+				temp = v->elementos[j + 1];
+				v->elementos[j + 1] = v->elementos[j];
+				v->elementos[j] = temp;
+			}
+		}
+	}
+}
+
+/* ordena por angulo polar con respecto a un vertice */
+void OrdenarPorAnguloPolarWRTVertice(Vertices *vs, Vertice *v)
+{
+	int i, j;
+	Vertice temp;
+	
+	OrdenarPorAnguloPolar(vs);
+
+	for(i = 0; i < vs->longitud; i++)
+	{
+		for(j = 0; j < vs->longitud - 1; j++)
+		{
+			if(!EnLaIzquierda(v, &vs->elementos[j], &vs->elementos[j + 1]))
+			{
+				temp = vs->elementos[j + 1];
+				vs->elementos[j + 1] = vs->elementos[j];
+				vs->elementos[j] = temp;
+			}
+		}
+	}
+}
+
+/* ordena los puntos de menor a mayor con respecto a x */
+void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada)
+{
+	Vertice temp;
+	int i, j;
+
+	/* 	recordar-cambiar por merge sort 
+	 	ordenando cada punto en sentido anti-horario 
+		bubble sort O(n^2)*/
+	for(i = 0; i < v->longitud; i++)
+	{
+		for(j = 0; j < v->longitud - 1; j++)
+		{
+			if(coordenada == coordenadaX)
+			{
+				if(v->elementos[j].x > v->elementos[j + 1].x)
+				{
+					temp = v->elementos[j + 1];
+					v->elementos[j + 1] = v->elementos[j];
+					v->elementos[j] = temp;
+				}
+			}
+			else
+			{
+				if(v->elementos[j].y > v->elementos[j + 1].y)
+				{
+					temp = v->elementos[j + 1];
+					v->elementos[j + 1] = v->elementos[j];
+					v->elementos[j] = temp;
+				}
+			}
+			
+		}
+	}
+}
 
