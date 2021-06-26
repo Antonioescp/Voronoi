@@ -13,6 +13,9 @@
 /* voronoi */
 #include <voronoi\voro.h>
 
+/* presentacion del programa */
+#include <voronoi\logo.h>
+
 #define COLOR_VERTICE WHITE
 #define COLOR_VERTICE_MEDIO RED
 #define COLOR_CONVEX_HULL GREEN
@@ -55,11 +58,15 @@ int main()
 
 	/* inicializando raton */
 	raton = newMouse();
-	mver();
 
 	/* inicializando entrada, para evitar llamadas erroneas */
 	input = '';
 
+	/* presentacion del programa */
+	presentacion();
+	getch();
+	cleardevice();
+	mver();
 	/* manejando entrada */
 	do
 	{
