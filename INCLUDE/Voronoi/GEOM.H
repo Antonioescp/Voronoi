@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <graphics.h>
 #include <dos.h>
+#include <math.h>
 
 /************************************************************************************
  * Esta biblioteca contiene los tipos de datos geometricos utilizados en el programa,
@@ -20,12 +21,21 @@
 #define VCOLOR_PUNTO_ACTUAL CYAN
 #define VCOLOR_LADO_ACTUAL BROWN
 #define VCOLOR_LADO_EXTREMO BROWN
+#define VCOLOR_LADO_POLI WHITE
+#define VCOLOR_PUNTO WHITE
 
 #define true 1
 #define false 0
 
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
+
+/* para elegir la coordenada en la que se ordenaran los puntos */
+typedef enum Coordenada
+{
+    coordenadaX,
+    coordenadaY
+} Coordenada;
 
 /* distintos modos de los algoritmos */
 typedef enum Modo
@@ -91,10 +101,12 @@ void DibujarPuntosExtremos(Vertices *v, enum COLORS color, enum COLORS colorNoEx
 void DibujarPoligonoDeStack(Vertices *v);
 /* dibuja los puntos de un stack */
 void DibujarPuntosDeStack(Vertices *v, enum COLORS color);
+/* dibuja un poligono a partir de los vertices */
+void DibujarPoligono(Vertices *v, enum COLORS color);
 
 /* funciones geometricas */
 /* calcula el doble del area de un triangulo utilizando la determinante */
-float Area2(Vertice *a, Vertice *b, Vertice *c);
+double Area2(Vertice *a, Vertice *b, Vertice *c);
 
 /* usa el signo de la determinante de un triangulo
 para determinar si c esta a la izquierda del segmento ab */
@@ -106,6 +118,23 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
 /* Busca el punto mas bajo y el mas a la izquierda de haber dos puntos mas bajos en y */
 /* lowest-then-leftmost */
 int LTL(Vertices* v);
+/* calcula la distancia entre dos puntos */
+int DistanciaEntrePuntos(Vertice *a, Vertice *b);
+/* calcula la distancia entre dos puntos */
+int DistanciaEntrePuntos2(int ax, int ay, int bx, int by);
+/* calcula el punto medio de una figura */
+Vertice PuntoMedio(Vertices *v);
+
+/* ordena los vertices por angulo polar apartir del punto
+menor con respecto a Y y con respecto a X de haber n puntos iguales
+menores en Y (LTL), se utiliza en el escaneo de Graham */
+void OrdenarPorAnguloPolar(Vertices *v);
+
+/* ordena por angulo polar con respecto a un vertice */
+void OrdenarPorAnguloPolarWRTVertice(Vertices *vs, Vertice *v);
+
+/* ordena los puntos de menor a mayor con respecto a x */
+void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada);
 
 #include <Voronoi\geom.c>
 

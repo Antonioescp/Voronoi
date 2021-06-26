@@ -4,11 +4,14 @@
 #include <mouse.h>
 #include <stdio.h>
 
-#include <voronoi\geom.h>
+/* interfaz grafica */
 #include <voronoi\ui.h>
-
 /* convexhull */
 #include <voronoi\ch.h>
+/* geometric intersection */
+#include <voronoi\geomint.h>
+/* voronoi */
+#include <voronoi\voro.h>
 
 #define COLOR_VERTICE WHITE
 #define COLOR_VERTICE_MEDIO RED
@@ -35,6 +38,7 @@ int main()
 
 	/* Coleccion de vertices agregados por el usuario */
 	Vertices vertices;
+	Vertice puntoMedio;
 
 	/* inicio aplicacion grafica */
 	initgraph(&gd, &gm, "C:\\tc20\\BIN");
@@ -53,6 +57,9 @@ int main()
 	raton = newMouse();
 	mver();
 
+	/* inicializando entrada, para evitar llamadas erroneas */
+	input = '';
+
 	/* manejando entrada */
 	do
 	{
@@ -64,6 +71,95 @@ int main()
 		/* manejando entrada de teclado */
 		switch(input)
 		{
+			/* triangula el poligono */
+			case 't':
+
+				mocultar();	
+
+				cleardevice();
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO);
+
+				mver();
+				input = '';
+				break;
+			/* diagrama de voronoi usando bruteForce */
+			case 'v':
+				mocultar();
+
+				cleardevice();
+
+				BruteVoronoi(&vertices);
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO);
+
+				mver();
+				input = '';
+				break;
+			/* imprime la distancia entre los dos primeros puntos */
+			case 'd':
+				mocultar();
+				cleardevice();
+
+				sprintf(buffer, "Distancia: %d", DistanciaEntrePuntos(&vertices.elementos[0], &vertices.elementos[1]));
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO);
+
+				outtextxy(15, 15, buffer);
+
+				mver();
+				input = '';
+				break;
+			/* dibuja el poligono de manera libre, es decir, en el orden dado */
+			case 'f':
+				mocultar();
+
+				cleardevice();
+
+				DibujarPoligono(&vertices, VCOLOR_PUNTO);
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO_EXTREMO);
+
+				mver();
+				input = '';
+				break;
+			/* dibuja un poligo despues de ordenar en angulo polar los vertices, con
+				respecto al punto mas bajo y mas a la izquierda (ltl) */
+			case 'p':
+				mocultar();
+
+				cleardevice();
+
+				puntoMedio = PuntoMedio(&vertices);
+
+				OrdenarPorAnguloPolarWRTVertice(&vertices, &puntoMedio);
+
+				DibujarPoligono(&vertices, VCOLOR_PUNTO);
+
+				DibujarVertices(&vertices, VCOLOR_PUNTO_EXTREMO);
+
+				mver();
+				input = '';
+				break;
+			/* reporta intersecciones */
+			case 'i':
+				mocultar();
+
+				cleardevice();
+				sprintf(buffer, "Interseccioes: %d", BruteForceSID(&vertices));
+
+				DibujarVertices(&vertices, COLOR_VERTICE);
+
+				setcolor(WHITE);
+				outtextxy(15, 15, buffer);
+
+				mver();
+				input = '';
+				break;
+			/* limpia memoria y sale del programa */
+			case 'q':
+				RemoverVertices(&vertices);
+				break;
 			/* utiliza el algoritmo de graham para dibujar la envolvente convexa */
 			case 'g':
 				mocultar();
@@ -84,7 +180,7 @@ int main()
 
 				DibujarVertices(&vertices, VCOLOR_PUNTO_DESCARTADO);
 
-				Jarvis(&vertices, modoDePresentacion, retraso);
+				JarvisMarch(&vertices, modoDePresentacion, retraso);
 
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
 				
@@ -92,8 +188,9 @@ int main()
 
 				input = '';
 				break;
-			/* para aumentar y disminuir el retraso */
-			case 'p':
+			/* para aumentar y disminuir el retraso +/- */
+			/* + */
+			case '+':
 				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE);
 
@@ -103,7 +200,8 @@ int main()
 				outtextxy(15, 15, buffer);
 				input = '';
 				break;
-			case 'o':
+			/* - */
+			case '-':
 				mocultar();
 
 				cleardevice();
