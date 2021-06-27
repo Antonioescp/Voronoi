@@ -9,6 +9,8 @@ Vertice newVertice(int x, int y)
 	v.y = y;
 	v.extremo = false;
 
+	v.opuesto = false;
+
 	return v;
 }
 
@@ -126,6 +128,35 @@ Vertice* StackVerticePop(Vertices *v)
 	return popped;
 }
 
+/* vertices queue, para tratar a la coleccion de vertices como queue */
+/* agrega un elemento a la cola */
+void QueueVerticePush(Vertices* v, Vertice *e)
+{
+	v->vacio = false;
+	AgregarVertice(v, e);
+}
+/* elimina un elemento de la cola */
+Vertice QueueVerticePop(Vertices* v)
+{
+	int i;
+	Vertice temp;
+	Vertice popped = v->elementos[0];
+
+	/* moviendo vertice removido al final */
+	for(i = 0; i < v->longitud - 1; i++)
+	{
+		temp = v->elementos[i];
+		v->elementos[i] = v->elementos[i + 1];
+		v->elementos[i + 1] = temp;
+	}
+
+	RemoverUltimoVertice(v);
+
+	if(v->longitud <= 0)
+		v->vacio = true;
+
+	return popped;
+}
 
 /* dibuja un vertice con su color */
 void DibujarVertice(Vertice *v, enum COLORS color)
@@ -310,6 +341,28 @@ int LTL(Vertices* v)
     return ltl;
 }
 
+/* Busca el punto mas alto y el mas a la izquierda de haber dos puntos mas altos en y */
+/* highest-then-leftmost */
+int HTL(Vertices* v)
+{
+	/* el primer extremo, tomaremos el primero momentaneamente */
+    int htl = 0;
+
+    /* probando todos los puntos */
+    int k;
+    for(k = 1; k < v->longitud; k++)
+    {
+        /* mas bajo then mas a la izquierda */
+        if(  v->elementos[k].y > v->elementos[htl].y || 
+            (v->elementos[k].y == v->elementos[htl].y && v->elementos[k].x < v->elementos[htl].x))
+        {
+            htl = k;
+        }
+    }
+
+    return htl;
+}
+
 /* calcula la distancia entre dos puntos */
 int DistanciaEntrePuntos(Vertice *a, Vertice *b)
 {
@@ -418,6 +471,42 @@ void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada)
 			else
 			{
 				if(v->elementos[j].y > v->elementos[j + 1].y)
+				{
+					temp = v->elementos[j + 1];
+					v->elementos[j + 1] = v->elementos[j];
+					v->elementos[j] = temp;
+				}
+			}
+			
+		}
+	}
+}
+
+/* ordena los puntos de mayor a menor con respecto a x */
+void OrdenarPorCoordenadaDescendente(Vertices *v, Coordenada coordenada)
+{
+	Vertice temp;
+	int i, j;
+
+	/* 	recordar-cambiar por merge sort 
+	 	ordenando cada punto en sentido anti-horario 
+		bubble sort O(n^2)*/
+	for(i = 0; i < v->longitud; i++)
+	{
+		for(j = 0; j < v->longitud - 1; j++)
+		{
+			if(coordenada == coordenadaX)
+			{
+				if(v->elementos[j].x < v->elementos[j + 1].x)
+				{
+					temp = v->elementos[j + 1];
+					v->elementos[j + 1] = v->elementos[j];
+					v->elementos[j] = temp;
+				}
+			}
+			else
+			{
+				if(v->elementos[j].y < v->elementos[j + 1].y)
 				{
 					temp = v->elementos[j + 1];
 					v->elementos[j + 1] = v->elementos[j];

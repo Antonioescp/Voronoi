@@ -50,6 +50,9 @@ typedef struct Vertice{
 	int x, y;
     bool extremo;
     int sucesor;
+
+    /* soporte para cadenas de poligonos */
+    bool opuesto;
 } Vertice;
 
 /* Un segmento en el plano, con sus puntos / vertices a y b */
@@ -65,6 +68,7 @@ typedef struct Vertices
 
     /* soporte para stack */
     int stackIndice;
+    /* para stack y queue */
     bool vacio;
 } Vertices;
 
@@ -86,6 +90,12 @@ void RemoverVertices(Vertices *v);
 void StackVerticePush(Vertices *v, Vertice *e);
 /* elimina un elemento del stack */
 Vertice* StackVerticePop(Vertices *v);
+
+/* vertices queue, para tratar a la coleccion de vertices como queue */
+/* agrega un elemento a la cola */
+void QueueVerticePush(Vertices* v, Vertice *e);
+/* elimina un elemento de la cola */
+Vertice QueueVerticePop(Vertices* v);
 
 /* dibuja un vertice con su color */
 void DibujarVertice(Vertice *v, enum COLORS color);
@@ -118,6 +128,9 @@ void RevisarLado(Vertices *v, int a, int b, Modo modo, int retraso);
 /* Busca el punto mas bajo y el mas a la izquierda de haber dos puntos mas bajos en y */
 /* lowest-then-leftmost */
 int LTL(Vertices* v);
+/* Busca el punto mas alto y el mas a la izquierda de haber dos puntos mas altos en y */
+/* highest-then-leftmost */
+int HTL(Vertices* v);
 /* calcula la distancia entre dos puntos */
 int DistanciaEntrePuntos(Vertice *a, Vertice *b);
 /* calcula la distancia entre dos puntos */
@@ -135,6 +148,8 @@ void OrdenarPorAnguloPolarWRTVertice(Vertices *vs, Vertice *v);
 
 /* ordena los puntos de menor a mayor con respecto a x */
 void OrdenarPorCoordenada(Vertices *v, Coordenada coordenada);
+/* ordena los puntos de mayor a menor con respecto a x */
+void OrdenarPorCoordenadaDescendente(Vertices *v, Coordenada coordenada);
 
 #include <Voronoi\geom.c>
 
