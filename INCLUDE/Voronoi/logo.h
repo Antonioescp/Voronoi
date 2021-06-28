@@ -27,6 +27,6 @@ void relleno(void);
 void internos(void);
 void barraDeCarga(void);
 
-#include "voronoi\logo.c"
+#include <voronoi\logo.c>
 
 #endif

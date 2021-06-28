@@ -36,6 +36,14 @@ bool Intersectan(Vertice *a, Vertice *b, Vertice *c, Vertice *d)
 			LLRR2 = true;
 		}
 
+	if(!LLRR && !LLRR2)
+	{
+		DibujarVertice(a, VCOLOR_PUNTO_DESCARTADO);
+		DibujarVertice(b, VCOLOR_PUNTO_DESCARTADO);
+		DibujarVertice(c, VCOLOR_PUNTO_DESCARTADO);
+		DibujarVertice(d, VCOLOR_PUNTO_DESCARTADO);
+	}
+
 	/* si ninguno tiene patron LL o RR entonces hay interseccion */
 	return (!LLRR && !LLRR2);
 }

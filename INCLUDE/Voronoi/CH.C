@@ -1,12 +1,16 @@
 #include <voronoi\ch.h>
 
-/*  determina los puntos extremos y dibuja la envolvente convexa,
+/*  determina los puntos extremos
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */
 void PuntosExtremosLento(Vertices *v, Modo modo, int retraso)
 {
+	/* este algoritmo hace lo que se le llama in-triangle test con
+	cada punto en la nube, los puntos que se encuentren dentro de un
+	triangulo son marcados como no extremos */
+	/* para iterar en todos los puntos */
 	int a, b, c, d;
 
-	/* en buena fe marcamos todos los puntos como extremos */
+	/* marcamos todos los puntos como extremos */
 	for(a = 0; a < v->longitud; a++)
 		v->elementos[a].extremo = true;
 	
@@ -72,6 +76,10 @@ void LadosExtremos(Vertices *v, Modo modo, int retraso)
 	for(a = 0; a < v->longitud; a++)
 		v->elementos[a].extremo = false;
 
+	/* lo que hace es tomar dos puntos y revisar en que lado se encuentran
+		los demas puntos, si todos los puntos estan a la izquierda, entonces,
+		es un lado extremo, mucho mas rapido que puntos extremons, pero sigue
+		siendo muy lento */
 	for(a = 0; a < v->longitud; a++)
 	{
 		for(b = a + 1; b < v->longitud; b++)
@@ -92,6 +100,7 @@ void JarvisMarch(Vertices *v, Modo modo, int retraso)
 	for(k = 0; k < v->longitud; k++)
 		v->elementos[k].extremo = false;
 
+	/* tomamos el punto mas bajo en ambas coordenadas */
 	ltl = LTL(v);
 	k = ltl;
 
@@ -137,7 +146,6 @@ void JarvisMarch(Vertices *v, Modo modo, int retraso)
 void GrahamScan(Vertices *v, Modo modo, int retraso)
 {
 	/* stacks */
-	/* recordar-cambiar estructura de stack por arreglo de punteros a vertice */
 	/* en el paso de inicializacion, despues de ordenar por angulo polar
 	los primeros dos elementos son puestos en S y los otros n-2 puntos en T 
 	en orden inverso de manera que el elemento 3 quede en el tope */

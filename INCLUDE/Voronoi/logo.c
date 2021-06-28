@@ -1,7 +1,7 @@
 #include <conio.h>
 #include <dos.h>
 #include <graphics.h>
-#include "voronoi\logo.h"
+#include <voronoi\logo.h>
 
 void presentacion(){
 	colores colorBorde=blanco;
@@ -17,15 +17,15 @@ void presentacion(){
 	setcolor(colorBorde);
 
 	settextstyle(6,0,1);
-	outtextxy(295,230,"LIFE IS TECHNOLOGIE");
+	outtextxy(295,230,"LIFE IS TECHNOLOGY");
 
 	settextstyle(3,0,5);
 	outtextxy(210,getmaxy()-130,"GITRICH Lab");
-
+	/*
 	settextstyle(2,0,5);
 	outtextxy(290,getmaxy()-35,"LOADING.");
 
-	barraDeCarga();
+	barraDeCarga();*/
 
 }
 

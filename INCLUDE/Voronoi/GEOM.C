@@ -394,7 +394,7 @@ Vertice PuntoMedio(Vertices *v)
 }
 
 /* ordena los vertices por angulo polar apartir del punto
-menor con respecto a Y y con respecto a X de haber n puntos iguales
+menor con respecto a Y y con respecto a X de haber mas puntos iguales
 menores en Y (LTL), se utiliza en el escaneo de Graham */
 void OrdenarPorAnguloPolar(Vertices *v)
 {

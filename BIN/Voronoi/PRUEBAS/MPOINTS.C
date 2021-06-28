@@ -36,7 +36,44 @@ int main()
 
 	/* manejo de entrada */
 	char input;
+
+	/* informacion en pantalla */
 	char buffer[50];
+	string integrantes[] = { "Marvin Alexander Sevilla Calero", 
+							 "Harold Jason Moreno Rocha",
+							 "Brayan Josue Potosme Rivera",
+							 "Cristina Jamileth Lopez Flores",
+							 "Pablo Isaias Alemán Mairena",
+							 "Juan Antonio Perez Escorcia" };
+	string opciones[] = { "W - Mostrar esto de nuevo",
+						  "Mouse",
+						  "Click Izquierdo - Colocar Punto",
+						  "Click Derecho - Eliminar Ultimo Punto",
+						  "Convex Hull",
+						  "S - Puntos extremos",
+						  "C - Por lados extremos",
+						  "J - Jarvis March",
+						  "G - Graham Scan",
+						  "Interseccion Geometrica",
+						  "I - SID fuerza bruta",
+						  "Triangulacion",
+						  "T - Triangulacion Monotona",
+						  "Voronoi",
+						  "V - Voronoi fuerza bruta",
+						  "Otros",
+						  "M - Modo Descriptivo",
+						  "-/+ - Latencia de modo descriptivo",
+						  "D - Distancia entre 2 puntos",
+						  "F - Dibujar Poligono Libre",
+						  "P - Poligono con respecto a punto medio",
+						  "R - Borrar vertices y limpiar",
+						  "Q - Salir",
+						  };
+
+	/* para mostrar descripciones una sola vez */
+	bool descTriangulacion = false;
+	bool descConvexHull = false;
+	bool descInterseccion = false;
 
 	/* manejo de raton */
 	Mouse raton;
@@ -66,9 +103,20 @@ int main()
 
 	/* presentacion del programa */
 	presentacion();
-	cleardevice();
-	mver();
+	getch();
 	
+
+	/* mostrando integrantes */
+	cleardevice();
+	newMenu(xMid - 175, yMid - 50, 350, 100, "Integrantes", integrantes, WHITE, LIGHTGRAY, DARKGRAY, 6);
+	getch();
+	
+	/* mostrando opciones del programa */
+	cleardevice();
+	newMenu(xMid - 175, yMid - 130, 350, 260, "Opciones", opciones, WHITE, LIGHTGRAY, DARKGRAY, 23);
+	getch();
+
+	mver();
 	/* manejando entrada */
 	do
 	{
@@ -80,21 +128,35 @@ int main()
 		/* manejando entrada de teclado */
 		switch(input)
 		{
+			/* muestra las opciones */
+			case 'w':
+				mocultar();
+				
+				cleardevice();
+				newMenu(xMid - 175, yMid - 130, 350, 260, "Opciones", opciones, WHITE, LIGHTGRAY, DARKGRAY, 23);
+
+				mver();
+				input = '';
+				break;
 			/* triangula el poligono */
 			case 't':
 				mocultar();
+				
+				if(!descTriangulacion)
+				{
+					cleardevice();
+					newMensaje(xMid - 175, yMid - 30, 350, 60, "Triangulacion", "En triangulacion se pintan blanco los puntos superior e inferior y las cadenas en rojo y verde", WHITE, LIGHTGRAY, DARKGRAY);
+					getch();
+					descTriangulacion = true;
+				}
+
+				cleardevice();
 				puntoMedio = PuntoMedio(&vertices);
 
+				/* pasos necesarios antes de triangular */
 				OrdenarPorAnguloPolarWRTVertice(&vertices, &puntoMedio);
-
-				DibujarPoligono(&vertices, WHITE);
-
+				
 				DeterminarCadenas(&vertices);
-
-				sprintf(buffer, "Es monotono: %d", EsMonotono(&vertices));
-				setcolor(WHITE);
-				outtextxy(15, 15, buffer);
-
 				for(i = 0; i <  vertices.longitud; i++)
 				{
 					if(vertices.elementos[i].cadena == izquierda)
@@ -104,6 +166,12 @@ int main()
 					else if(vertices.elementos[i].cadena == ambas)
 						DibujarVertice(&vertices.elementos[i], WHITE);
 				}
+
+				DibujarPoligono(&vertices, WHITE);
+
+				sprintf(buffer, "%s", EsMonotono(&vertices) ? "Es monotono" : "No es monotono");
+				setcolor(WHITE);
+				outtextxy(15, 15, buffer);
 
 				TriangulacionMonotona(&vertices);
 
@@ -172,11 +240,18 @@ int main()
 			case 'i':
 				mocultar();
 
-				cleardevice();
-				sprintf(buffer, "Interseccioes: %d", BruteForceSID(&vertices));
+				if(!descInterseccion)
+				{
+					cleardevice();
+					newMensaje(xMid - 175, yMid - 30, 350, 60, "Interseccion Geometrica", "En interseccion, se pintan rojo los puntos cuyos segmentos intersectan", WHITE, LIGHTGRAY, DARKGRAY);
+					getch();
+					descInterseccion = true;
+				}
 
+				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE);
 
+				sprintf(buffer, "Interseccioes: %d", BruteForceSID(&vertices));
 				setcolor(WHITE);
 				outtextxy(15, 15, buffer);
 
@@ -190,8 +265,16 @@ int main()
 			/* utiliza el algoritmo de graham para dibujar la envolvente convexa */
 			case 'g':
 				mocultar();
-				cleardevice();
 
+				if(!descConvexHull)
+				{
+					cleardevice();
+					newMensaje(xMid - 175, yMid - 50, 350, 100, "Convex Hull", "En el modo descriptivo, en convex hull, se pinta de color celeste el punto/lado/triangulo siendo analizado en ese momento y se dejan de ese color, en general se pinta de color cafe los lados extremos, de color rojo los puntos no extremos y verdes los puntos extremos.", WHITE, LIGHTGRAY, DARKGRAY);
+					getch();
+					descConvexHull = true;
+				}
+
+				cleardevice();
 				DibujarVertices(&vertices, VCOLOR_PUNTO_DESCARTADO);
 
 				GrahamScan(&vertices, modoDePresentacion, retraso);
@@ -203,8 +286,16 @@ int main()
 			/* utiliza el algoritmo de jarvis para dibujar la envolvente */
 			case 'j':
 				mocultar();
-				cleardevice();
 
+				if(!descConvexHull)
+				{
+					cleardevice();
+					newMensaje(xMid - 175, yMid - 50, 350, 100, "Convex Hull", "En el modo descriptivo, en convex hull, se pinta de color celeste el punto/lado/triangulo siendo analizado en ese momento y se dejan de ese color, en general se pinta de color cafe los lados extremos, de color rojo los puntos no extremos y verdes los puntos extremos.", WHITE, LIGHTGRAY, DARKGRAY);
+					getch();
+					descConvexHull = true;
+				}
+
+				cleardevice();
 				DibujarVertices(&vertices, VCOLOR_PUNTO_DESCARTADO);
 
 				JarvisMarch(&vertices, modoDePresentacion, retraso);
@@ -221,7 +312,7 @@ int main()
 				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE);
 
-				retraso += retraso >= 500 ? 0 : 10 ;
+				retraso = retraso + 10 > 500 ? 0 : retraso + 10;
 
 				sprintf(buffer, "Retraso: %dms", retraso);
 				outtextxy(15, 15, buffer);
@@ -234,7 +325,7 @@ int main()
 				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE);
 
-				retraso -= retraso <= 0 ? 0 : 10 ;
+				retraso = retraso - 10 < 0 ? 500 : retraso - 10 ;
 
 				sprintf(buffer, "Retraso: %dms", retraso);
 				outtextxy(15, 15, buffer);
@@ -267,7 +358,15 @@ int main()
 			/* determina lados extremos */
 			case 'c':
 				mocultar();
+				if(!descConvexHull)
+				{
+					cleardevice();
+					newMensaje(xMid - 175, yMid - 50, 350, 100, "Convex Hull", "En el modo descriptivo, en convex hull, se pinta de color celeste el punto/lado/triangulo siendo analizado en ese momento y se dejan de ese color, en general se pinta de color cafe los lados extremos, de color rojo los puntos no extremos y verdes los puntos extremos.", WHITE, LIGHTGRAY, DARKGRAY);
+					getch();
+					descConvexHull = true;
+				}
 				
+				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
 				LadosExtremos(&vertices, modoDePresentacion, retraso);
 				DibujarPuntosExtremos(&vertices, COLOR_CONVEX_HULL, COLOR_VERTICE_MEDIO);
@@ -278,7 +377,15 @@ int main()
 			/* determina puntos extremos */
 			case 's':
 				mocultar();
+				if(!descConvexHull)
+				{
+					cleardevice();
+					newMensaje(xMid - 175, yMid - 50, 350, 100, "Convex Hull", "En el modo descriptivo, en convex hull, se pinta de color celeste el punto/lado/triangulo siendo analizado en ese momento y se dejan de ese color, en general se pinta de color cafe los lados extremos, de color rojo los puntos no extremos y verdes los puntos extremos.", WHITE, LIGHTGRAY, DARKGRAY);
+					getch();
+					descConvexHull = true;
+				}
 
+				cleardevice();
 				DibujarVertices(&vertices, COLOR_VERTICE_MEDIO);
 				PuntosExtremosLento(&vertices, modoDePresentacion, retraso);
 
@@ -331,6 +438,7 @@ int main()
 		/* manejando click izquierdo, agrega un vertice y lo dibuja */
 		if(raton.clickIzquierdo == Presionado && raton.operacionClickIzquierdo == NoHecho)
 		{
+			mocultar();
 			cleardevice();
 			AgregarVertice(&vertices, &raton.posicion);
 
@@ -339,7 +447,6 @@ int main()
 			outtextxy(15, 15, buffer);
 
 			/* dibujando vertices */
-			mocultar();
 			DibujarVertices(&vertices, COLOR_VERTICE);
 			mver();
 
@@ -355,21 +462,23 @@ int main()
 
 		/* manejando click derecho, elimina el ultimo vertice en la coleccion */
 		if(raton.clickDerecho == Presionado && raton.operacionClickDerecho == NoHecho)
-		{			
+		{	
+			mocultar();	
 			/* removiendo de coleccion */
 			RemoverUltimoVertice(&vertices);
 
 			cleardevice();
 			/* borrando de pantalla el vertice */
-			mocultar();
+			
 			DibujarVertices(&vertices, COLOR_VERTICE);
-			mver();
+			
 
 			sprintf(buffer, "Puntos: %d", vertices.longitud);
 			setcolor(WHITE);
 			outtextxy(15, 15, buffer);
 
 			raton.operacionClickDerecho = Hecho;
+			mver();
 		}
 
 		/* actualizando estado de operacion */

@@ -32,6 +32,7 @@ void newMensaje(int x, int y, int ancho, int alto, char *titulo, char *contenido
 	rectangle(x + 5, y + 15, x2 - 5, y2 - 5);
 
 	/* escribiendo el titulo */
+	settextstyle(0, 0, 1);
 	setcolor(texto);
 	outtextxy(x + 10, y + 5, titulo);
 
@@ -88,17 +89,18 @@ void newMenu(int x, int y, int ancho, int alto, char *titulo, string opciones[],
 	setfillstyle(SOLID_FILL, BLACK);
 	setcolor(colorBordeExt);
 	rectangle(x, y, x2, y2);
-	floodfill(x + 1, y + 1, colorBordeExt);
+	floodfill(x + 3, y + 3, colorBordeExt);
 
 	/* dibujando nueva ventana, relleno */
 	setfillstyle(SOLID_FILL, relleno);
-	floodfill(x + 1, y + 1, colorBordeExt);
+	floodfill(x + 3, y + 3, colorBordeExt);
 
 	/* dibujando contenedor */
 	setcolor(borde);
 	rectangle(x + 5, y + 15, x2 - 5, y2 - 5);
 
 	/* escribiendo el titulo */
+	settextstyle(0, 0, 1);
 	setcolor(texto);
 	outtextxy(x + 10, y + 5, titulo);
 
