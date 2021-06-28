@@ -23,12 +23,21 @@
 #define VCOLOR_LADO_EXTREMO BROWN
 #define VCOLOR_LADO_POLI WHITE
 #define VCOLOR_PUNTO WHITE
+#define VCOLOR_DIAGONAL LIGHTBLUE
 
 #define true 1
 #define false 0
 
 /* en lugar de un enum para consumir menos memoria */
 typedef unsigned char bool;
+
+/* para determinar a que cadena pertenece el vertice (para triangulacion) */
+typedef enum Cadena
+{
+    izquierda,
+    derecha,
+    ambas /* puntos finales e iniciales de las cadenas */
+} Cadena;
 
 /* para elegir la coordenada en la que se ordenaran los puntos */
 typedef enum Coordenada
@@ -52,7 +61,7 @@ typedef struct Vertice{
     int sucesor;
 
     /* soporte para cadenas de poligonos */
-    bool opuesto;
+    Cadena cadena;
 } Vertice;
 
 /* Un segmento en el plano, con sus puntos / vertices a y b */

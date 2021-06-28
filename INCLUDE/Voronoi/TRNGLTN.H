@@ -7,12 +7,11 @@
 
 
 /* obtiene las cadenas del poligono */
-void Cadenas(Vertices *v);
+void DeterminarCadenas(Vertices *v);
 /* prueba si un poligono es monotono */
 bool EsMonotono(Vertices *v);
 /* triangula un poligono monotono */
 void TriangulacionMonotona(Vertices *v);
-
 
 #include <voronoi\trngltn.c>
 

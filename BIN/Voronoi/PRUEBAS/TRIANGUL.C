@@ -31,6 +31,7 @@ int main()
 
 	/* Coleccion de vertices agregados por el usuario */
 	Vertices vertices;
+	Vertice puntoMedio;
 
 	/* inicio aplicacion grafica */
 	initgraph(&gd, &gm, "");
@@ -59,20 +60,56 @@ int main()
 		{
 			case 'c':
 				mocultar();
+				puntoMedio = PuntoMedio(&vertices);
+
+				OrdenarPorAnguloPolarWRTVertice(&vertices, &puntoMedio);
+
+				DibujarPoligono(&vertices, WHITE);
+
+				DeterminarCadenas(&vertices);
 
 				sprintf(buffer, "Es monotono: %d", EsMonotono(&vertices));
 				setcolor(WHITE);
 				outtextxy(15, 15, buffer);
 
-				DibujarPoligono(&vertices, WHITE);
-				Cadenas(&vertices);
 				for(i = 0; i <  vertices.longitud; i++)
 				{
-					if(vertices.elementos[i].opuesto)
+					if(vertices.elementos[i].cadena == izquierda)
 						DibujarVertice(&vertices.elementos[i], RED);
-					else
+					else if(vertices.elementos[i].cadena == derecha)
 						DibujarVertice(&vertices.elementos[i], GREEN);
+					else if(vertices.elementos[i].cadena == ambas)
+						DibujarVertice(&vertices.elementos[i], WHITE);
 				}
+
+				mver();
+				input = '';
+				break;
+			case 't':
+				mocultar();
+				puntoMedio = PuntoMedio(&vertices);
+
+				OrdenarPorAnguloPolarWRTVertice(&vertices, &puntoMedio);
+
+				DibujarPoligono(&vertices, WHITE);
+
+				DeterminarCadenas(&vertices);
+
+				sprintf(buffer, "Es monotono: %d", EsMonotono(&vertices));
+				setcolor(WHITE);
+				outtextxy(15, 15, buffer);
+
+				for(i = 0; i <  vertices.longitud; i++)
+				{
+					if(vertices.elementos[i].cadena == izquierda)
+						DibujarVertice(&vertices.elementos[i], RED);
+					else if(vertices.elementos[i].cadena == derecha)
+						DibujarVertice(&vertices.elementos[i], GREEN);
+					else if(vertices.elementos[i].cadena == ambas)
+						DibujarVertice(&vertices.elementos[i], WHITE);
+				}
+
+				TriangulacionMonotona(&vertices);
 
 				mver();
 				input = '';

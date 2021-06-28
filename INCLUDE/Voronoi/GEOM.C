@@ -9,7 +9,7 @@ Vertice newVertice(int x, int y)
 	v.y = y;
 	v.extremo = false;
 
-	v.opuesto = false;
+	v.cadena = ambas;
 
 	return v;
 }
