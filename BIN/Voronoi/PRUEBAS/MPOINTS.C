@@ -6,12 +6,14 @@
 
 /* interfaz grafica */
 #include <voronoi\ui.h>
-/* convexhull */
+/* convex hull */
 #include <voronoi\ch.h>
 /* geometric intersection */
 #include <voronoi\geomint.h>
 /* voronoi */
 #include <voronoi\voro.h>
+/* triangulacion monotona */
+#include <voronoi\trngltn.h>
 
 /* presentacion del programa */
 #include <voronoi\logo.h>
@@ -30,7 +32,7 @@ int main()
 	int retraso = 0;
 
 	/* limites del plano */
-	int xMax, yMax, xMid, yMid;
+	int xMax, yMax, xMid, yMid, i;
 
 	/* manejo de entrada */
 	char input;
@@ -64,9 +66,9 @@ int main()
 
 	/* presentacion del programa */
 	presentacion();
-	getch();
 	cleardevice();
 	mver();
+	
 	/* manejando entrada */
 	do
 	{
@@ -80,12 +82,30 @@ int main()
 		{
 			/* triangula el poligono */
 			case 't':
+				mocultar();
+				puntoMedio = PuntoMedio(&vertices);
 
-				mocultar();	
+				OrdenarPorAnguloPolarWRTVertice(&vertices, &puntoMedio);
 
-				cleardevice();
+				DibujarPoligono(&vertices, WHITE);
 
-				DibujarVertices(&vertices, VCOLOR_PUNTO);
+				DeterminarCadenas(&vertices);
+
+				sprintf(buffer, "Es monotono: %d", EsMonotono(&vertices));
+				setcolor(WHITE);
+				outtextxy(15, 15, buffer);
+
+				for(i = 0; i <  vertices.longitud; i++)
+				{
+					if(vertices.elementos[i].cadena == izquierda)
+						DibujarVertice(&vertices.elementos[i], RED);
+					else if(vertices.elementos[i].cadena == derecha)
+						DibujarVertice(&vertices.elementos[i], GREEN);
+					else if(vertices.elementos[i].cadena == ambas)
+						DibujarVertice(&vertices.elementos[i], WHITE);
+				}
+
+				TriangulacionMonotona(&vertices);
 
 				mver();
 				input = '';

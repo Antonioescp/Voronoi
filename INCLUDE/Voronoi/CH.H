@@ -1,13 +1,13 @@
 #ifndef _CONVEXHULL
 #define _CONVEXHULL
 
-/****************************************
+/*********************************************************************
  * esta biblioteca sirve para encontrar los puntos extremos 
  * y tambien para dibujar la envolvente convexa a traves de distintos
  * metodos
- * *********************  */
+ * *******************************************************************  */
 
-/* herramientas geometricas base */
+/* biblioteca base de elementos geometricos y herramientas fundamentales */
 #include <voronoi\geom.h>
 
 /*  determina los puntos extremos con pruebas in-triangle

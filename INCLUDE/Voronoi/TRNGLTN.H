@@ -1,10 +1,13 @@
 #ifndef _TRNGLTN
 #define _TRNGLTN
 
-/* esta biblioteca contiene funciones para triangular */
-/* biblioteca base de elementos geometricos */
-#include <voronoi\geom.h>
+/*******************************************************
+ * esta biblioteca contiene funciones para triangular 
+ * 
+ * *****************************************************/
 
+/* biblioteca base de elementos geometricos y herramientas fundamentales */
+#include <voronoi\geom.h>
 
 /* obtiene las cadenas del poligono */
 void DeterminarCadenas(Vertices *v);

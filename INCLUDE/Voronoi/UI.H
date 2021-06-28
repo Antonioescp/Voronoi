@@ -1,13 +1,16 @@
 #ifndef _UI
 #define _UI
 
-/* herramientas geometricas */
-#include <voronoi\geom.h>
-
-/**********************************************************
+/**************************************************************
  * Esta biblioteca es para el manejo de estados del mouse
- * y para otros elementos de interfaz de usuario
- * ********************************************************/
+ * y para otros elementos de interfaz de usuario como mensajes
+ * y menus
+ * ************************************************************/
+
+/* biblioteca base de elementos geometricos y herramientas fundamentales */
+#include <voronoi\geom.h>
+/* mensajes y menus para el usuario */
+#include <voronoi\msgs.h>
 
 /* representa los estados de las operaciones asignadas a un click 
    sirve para tener un control sobre las operaciones asignadas a 

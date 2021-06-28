@@ -1,17 +1,17 @@
 #ifndef _GEOM
 #define _GEOM
 
+/************************************************************************************
+ * Esta biblioteca contiene los tipos de datos geometricos utilizados en el programa,
+ * estos tipos representan ciertos elementos geometricos necesarios para
+ * llevar a cabo distintos algoritmos de una manera mas sencilla
+ * tambien contiene funciones para el manejo de las mismas estructuras.
+ * ***********************************************************************************/
+
 #include <stdlib.h>
 #include <graphics.h>
 #include <dos.h>
 #include <math.h>
-
-/************************************************************************************
- * Esta biblioteca contiene los tipos de datos geometricos utilizados en el programa,
- * estos tipos representan ciertos elementos geometricos necesarios para
- * el diagrama de voronoi, tambien contiene funciones para el manejo de
- * las mismas estructuras.
- * ***********************************************************************************/
 
 #define RADIO_VERTICE 2
 

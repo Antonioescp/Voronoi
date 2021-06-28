@@ -1,7 +1,5 @@
 #include <voronoi\ch.h>
 
-
-
 /*  determina los puntos extremos y dibuja la envolvente convexa,
     este algoritmo es muy lento, tiene una complejidad de O(n^4) */
 void PuntosExtremosLento(Vertices *v, Modo modo, int retraso)
