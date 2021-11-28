@@ -21,3 +21,8 @@ la latencia puede ser entre 0ms-500ms.
   
 - Diagrama de voronoi
   - Diagrama de voronoi por fuerza bruta
+
+# Uso
+- Asegurate de copiar las carpetas de BIN e INCLUDE en los respectivos folders de TC20
+- Ejecuta main.c encontrado en BIN/Voronoi
+- Disfruta
